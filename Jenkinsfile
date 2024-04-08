@@ -11,7 +11,7 @@ pipeline {
                 echo "Building and testing..."
                 sh '''
                 cd ./Dockerfiles
-                docker compose up
+                docker-compose up --exit-code-from test_app
                 docker compose down
                 '''
             }
@@ -23,7 +23,6 @@ pipeline {
 		mkdir logs         
                 docker compose logs build_app > logs/build-logs.txt
                 docker compose logs test_app > logs/test-logs.txt
-                
                 '''
             }
         }
