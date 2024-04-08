@@ -19,8 +19,8 @@ pipeline {
         stage('Deliver') {
             steps {
                 echo 'Deliver...'
-                sh '''       
-		mkdir logs         
+                sh '''
+		cd ./Dockerfiles       
                 docker compose logs build_app > logs/build-logs.txt
                 docker compose logs test_app > logs/test-logs.txt
                 '''
