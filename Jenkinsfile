@@ -11,7 +11,7 @@ pipeline {
                 echo "Building and testing..."
                 sh '''
                 cd ./Dockerfiles
-                docker-compose up --exit-code-from test_app
+                docker compose up --exit-code-from test_app
                 docker compose down
                 '''
             }
