@@ -12,16 +12,18 @@ pipeline {
                 sh '''
                 cd ./Dockerfiles
                 docker compose up
-                docker compose logs builder > logs/build-logs.txt
-                docker compose logs tester > logs/test-logs.txt
+                docker compose down
                 '''
             }
         }
         stage('Deliver') {
             steps {
                 echo 'Deliver...'
-                sh '''
-                docker compose down
+                sh '''       
+		mkdir logs         
+                docker compose logs build_app > logs/build-logs.txt
+                docker compose logs test_app > logs/test-logs.txt
+                
                 '''
             }
         }
