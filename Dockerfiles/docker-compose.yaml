@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  build_app:
+    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    image: jestapp:build
+    ports:
+      - "3000"
+  test_app:
+    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    image: jestapp:test
+    depends_on:
+      - build_app
