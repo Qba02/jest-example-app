@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.app
+    container_name: build-container
     image: jestapp:build
     ports:
       - "3000"
@@ -14,6 +15,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.test
+    container_name: test-container
     image: jestapp:test
     depends_on:
       - build_app

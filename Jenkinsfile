@@ -21,8 +21,8 @@ pipeline {
                 echo 'Deliver...'
                 sh '''
 		cd ./Dockerfiles       
-                docker compose logs build_app > build-logs.txt
-                docker compose logs test_app > test-logs.txt
+                docker logs build-container > build-logs.log
+                docker logs test-container > test-logs.log
                 '''
             }
         }
