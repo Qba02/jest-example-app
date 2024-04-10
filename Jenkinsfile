@@ -12,7 +12,6 @@ pipeline {
                 sh '''
                 cd ./Dockerfiles
                 docker compose up --exit-code-from test_app
-                docker compose down
                 '''
             }
         }
@@ -23,6 +22,7 @@ pipeline {
 		cd ./Dockerfiles       
                 docker logs build-container > build-logs.log
                 docker logs test-container > test-logs.log
+		docker compose down
                 '''
             }
         }
