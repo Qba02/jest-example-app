@@ -11,8 +11,8 @@ pipeline {
             steps {
                 echo "Stopping and removing previous containers..."
                 sh '''
-                docker stop -f $(docker ps -a -q)
-                docker rm -f $(docker ps -a -q)
+                docker stop $(docker ps -a -q)
+                docker rm $(docker ps -a -q)
                 '''
             }
         }
