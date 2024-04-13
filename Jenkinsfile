@@ -5,7 +5,21 @@ pipeline {
         pollSCM('*/2 * * * *')
     }
 
+
     stages {
+ 	stage('StopContainers') {
+            steps {
+                echo "Stopping and removing previous containers..."
+		script {
+                    // Jesli kontenery istnieja to zostaja zatrzymane i usuniete
+                    if (sh(returnStatus: true, script: 'docker ps -a -q').trim()) {
+                        sh 'docker stop -f $(docker ps -a -q)'
+                        sh 'docker rm -f $(docker ps -a -q)'
+                    }
+                }
+            }
+        }
+
         stage('BuildAndTest') {
             steps {
                 echo "Building and testing..."
