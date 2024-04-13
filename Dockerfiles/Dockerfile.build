@@ -10,4 +10,3 @@ WORKDIR /jestApp/jest-example-app
 
 RUN yarn install --omit=dev
 RUN yarn run build
-RUN npm install -g serve

@@ -39,9 +39,7 @@ class App extends Component {
             alt="logo"
             onClick={() => this.toggleState()}
           />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
+          <p>Deployed syccessfully</p>
           <a
             className="App-link"
             href="https://reactjs.org"
