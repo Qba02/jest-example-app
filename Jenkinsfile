@@ -31,7 +31,7 @@ pipeline {
                 sh '''
                 cd ./Dockerfiles
                 docker build -t jestapp:deploy -f Dockerfile.deploy .
-                docker run -d --net=host -p 41247:3000 --name deploy-container jestapp:deploy
+                docker run -d --network host -p 41247:3000 --name deploy-container jestapp:deploy
                 '''
             }
         }
