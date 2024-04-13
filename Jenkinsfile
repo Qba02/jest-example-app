@@ -7,19 +7,6 @@ pipeline {
 
 
     stages {
-        stage('PrepareEnvironment') {
-            steps {
-                echo "Stopping and removing previous containers..."
-                script {
-                    // Jeśli kontenery istnieją, są one zatrzymywane i usuwane
-                    if [ "$(docker ps -a -q)" ]; then
-                        sh 'docker stop -f $(docker ps -a -q)'
-                        sh 'docker rm -f $(docker ps -a -q)'
-                    fi
-                }
-            }
-        }
-
         stage('BuildAndTest') {
             steps {
                 echo "Building and testing..."
