@@ -7,6 +7,18 @@ pipeline {
 
 
     stages {
+        stage('PrepareEnvironment') {
+            steps {
+                script {
+                    echo "Stopping and removing previous containers..."
+                    // Jeśli kontenery istnieją, są one zatrzymywane i usuwane
+                    if (sh(script: 'docker ps -a -q', returnStatus: true).trim()) {
+                        sh 'docker stop -f $(docker ps -a -q)'
+                        sh 'docker rm -f $(docker ps -a -q)'
+                    }
+                }
+            }
+        }
         stage('BuildAndTest') {
             steps {
                 echo "Building and testing..."
@@ -30,11 +42,11 @@ pipeline {
             steps {
                 echo 'Archiving logs...'
                 sh '''
-		        cd ./Dockerfiles       
+		cd ./Dockerfiles       
                 docker logs build-container > build-logs.log
                 docker logs test-container > test-logs.log
                 docker logs deploy-container > deploy-logs.log
-		        docker compose down
+		docker compose down
                 '''
             }
         }
