@@ -11,8 +11,8 @@ pipeline {
             steps {
                 echo "Stopping and removing previous containers..."
                 sh '''
-                docker stop $(docker ps -a -q)
-                docker rm $(docker ps -a -q)
+                docker stop deploy-container
+                docker rm deploy-container
                 '''
             }
         }
@@ -31,7 +31,7 @@ pipeline {
                 sh '''
                 cd ./Dockerfiles
                 docker build -t jestapp:deploy -f Dockerfile.deploy .
-                docker run -d --network host -p 41247:3000 --name deploy-container jestapp:deploy
+                docker run -d -p 41247:3000 --name deploy-container jestapp:deploy
                 '''
             }
         }
