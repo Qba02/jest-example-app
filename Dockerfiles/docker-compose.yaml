@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.build
+      args:
+        BUILD_NO_CACHE: --no-cache
     container_name: build-container
     image: jestapp:build
     ports:
@@ -15,6 +17,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.test
+      args:
+        BUILD_NO_CACHE: --no-cache
     container_name: test-container
     image: jestapp:test
     depends_on:
