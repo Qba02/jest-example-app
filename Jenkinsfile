@@ -9,16 +9,12 @@ pipeline {
     stages {
         stage('Prepare Environment') {
             steps {
-                script {
-                    def containersName = "deploy-container|test-container|build-container"
-                    def containersTags = sh(script: "docker ps -aqf name=${containersName}", returnStdout: true).trim()
-                    echo "$containersName"
-
-                    if (containersTags) {
-                        sh "docker stop $containersTags"
-                        sh "docker rm $containersTags"
-                    }
-                }
+                echo "Stopping and remowing previous containers..."
+                sh '''
+                cd ./Dockerfiles
+                chmod +x shutdown.sh
+                ./shutdown.sh
+                '''
             }
         }
         stage('Build and Test') {
