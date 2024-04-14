@@ -9,7 +9,6 @@ pipeline {
     stages {
         stage('Prepare Environment') {
             steps {
-                echo "Stopping and remowing previous containers..."
                 sh '''
                 cd ./Dockerfiles
                 chmod +x shutdown.sh
