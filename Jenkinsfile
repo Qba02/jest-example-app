@@ -3,7 +3,6 @@ pipeline {
 
     environment{
         DOCKERHUB_CREDENTIALS = credentials('qba002-dockerhub-token')
-        BUILD_NUMBER = env.BUILD_NUMBER
         IMAGE_NAME = 'jestapp'
     }
 
@@ -37,7 +36,7 @@ pipeline {
                 echo "Deploying ..."
                 sh '''
                 cd ./Dockerfiles
-                docker build  -t $IMAGE_NAME:v1.$BUILD_NUMBER -f Dockerfile.deploy .
+                docker build -t $IMAGE_NAME:v1.${env.BUILD_NUMBER} -f Dockerfile.deploy .
                 docker run -d -p 41247:3000 --name deploy-container jestapp:deploy
                 '''
             }
@@ -60,14 +59,14 @@ pipeline {
         }
         stage('Publish') {
             steps {
-                echo "Publishing"
+                echo "Publishing version number v1.${env.BUILD_NUMBER}"
                 sh '''
                 docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                docker tag $IMAGE_NAME:v1.$BUILD_NUMBER qba002/$IMAGE_NAME:v1.$BUILD_NUMBER
-                docker tag $IMAGE_NAME:v1.$BUILD_NUMBER qba002/$IMAGE_NAME:latest
-                docker push qba002/$IMAGE_NAME:v1.$BUILD_NUMBER
+                docker tag $IMAGE_NAME:v1.${env.BUILD_NUMBER} qba002/$IMAGE_NAME:v1.${env.BUILD_NUMBER}
+                docker tag $IMAGE_NAME:v1.${env.BUILD_NUMBER} qba002/$IMAGE_NAME:latest
+                docker push qba002/$IMAGE_NAME:v1.${env.BUILD_NUMBER}
                 docker push qba002/$IMAGE_NAME:latest
-                docker rmi qba002/$IMAGE_NAME:latest qba002/$IMAGE_NAME:v1.$BUILD_NUMBER
+                docker rmi qba002/$IMAGE_NAME:latest qba002/$IMAGE_NAME:v1.${env.BUILD_NUMBER}
                 '''
             }
         }
