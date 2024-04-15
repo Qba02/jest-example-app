@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    environment{
+        DOCKERHUB_CREDENTIALS = credentials('qba002-dockerhub-token')
+        BUILD_NUMBER = env.BUILD_NUMBER
+        IMAGE_NAME = 'jestapp'
+    }
+
     triggers {
         pollSCM('*/2 * * * *')
     }
@@ -21,7 +27,7 @@ pipeline {
                 echo "Building and testing..."
                 sh '''
                 cd ./Dockerfiles
-                docker compose build 
+                docker compose build
                 docker compose up --exit-code-from test_app
                 '''
             }
@@ -31,7 +37,7 @@ pipeline {
                 echo "Deploying ..."
                 sh '''
                 cd ./Dockerfiles
-                docker build  -t jestapp:deploy -f Dockerfile.deploy .
+                docker build  -t $IMAGE_NAME:v1.$BUILD_NUMBER -f Dockerfile.deploy .
                 docker run -d -p 41247:3000 --name deploy-container jestapp:deploy
                 '''
             }
@@ -51,6 +57,24 @@ pipeline {
                 '''
                 archiveArtifacts(artifacts: 'archive.tar.gz', onlyIfSuccessful: true)
             }
+        }
+        stage('Publish') {
+            steps {
+                echo "Publishing"
+                sh '''
+                docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                docker tag $IMAGE_NAME:v1.$BUILD_NUMBER qba002/$IMAGE_NAME:v1.$BUILD_NUMBER
+                docker tag $IMAGE_NAME:v1.$BUILD_NUMBER qba002/$IMAGE_NAME:latest
+                docker push qba002/$IMAGE_NAME:v1.$BUILD_NUMBER
+                docker push qba002/$IMAGE_NAME:latest
+                docker rmi qba002/$IMAGE_NAME:latest qba002/$IMAGE_NAME:v1.$BUILD_NUMBER
+                '''
+            }
+        }
+    }
+    post{
+        always{
+            sh 'docker logout'
         }
     }
 }
