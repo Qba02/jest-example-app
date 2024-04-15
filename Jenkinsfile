@@ -26,7 +26,7 @@ pipeline {
                 echo "Building and testing..."
                 sh '''
                 cd ./Dockerfiles
-                docker compose build
+                docker compose build --no-cache
                 docker compose up --exit-code-from test_app
                 '''
             }
@@ -36,7 +36,7 @@ pipeline {
                 echo "Deploying ..."
                 sh '''
                 cd ./Dockerfiles
-                docker build -t $IMAGE_NAME -f Dockerfile.deploy .
+                docker build --no-cache -t $IMAGE_NAME -f Dockerfile.deploy .
                 docker run -d -p 41247:3000 --name deploy-container $IMAGE_NAME
                 '''
             }
@@ -66,7 +66,7 @@ pipeline {
                 docker tag $IMAGE_NAME qba002/jestapp:latest
                 docker push qba002/$IMAGE_NAME
                 docker push qba002/jestapp:latest
-                docker rmi qba002/$IMAGE_NAME:latest qba002/$IMAGE_NAME
+                docker rmi qba002/jestapp:latest qba002/$IMAGE_NAME
                 '''
             }
         }
