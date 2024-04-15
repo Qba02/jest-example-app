@@ -31,21 +31,23 @@ pipeline {
                 echo "Deploying ..."
                 sh '''
                 cd ./Dockerfiles
-                docker build -t jestapp:deploy -f Dockerfile.deploy .
+                docker build --no-cache -t jestapp:deploy -f Dockerfile.deploy .
                 docker run -d -p 41247:3000 --name deploy-container jestapp:deploy
                 '''
             }
         }
-        stage('Archive logs') {
+        stage('Archive') {
             steps {
-                echo 'Archiving logs...'
+                echo 'Archiving build output and test logs...'
                 sh '''
-		        cd ./Dockerfiles       
+                mkdir artifact 
+		        cd ./artifact     
                 docker logs build-container > build-logs.log
                 docker logs test-container > test-logs.log
-                docker logs deploy-container > deploy-logs.log
 		        docker compose down
+                docker cp deploy-container:server/build .
                 '''
+                archiveArtifacts(artifacts: 'artifact/', onlyIfSuccessful: true)
             }
         }
     }
