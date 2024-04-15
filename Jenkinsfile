@@ -44,7 +44,7 @@ pipeline {
 		        cd ./artifact     
                 docker logs build-container > build-logs.log
                 docker logs test-container > test-logs.log
-		        docker compose down
+		        docker compose -f ./Dockerfiles/docker-compose.yaml down
                 docker cp deploy-container:server/build .
                 '''
                 archiveArtifacts(artifacts: 'artifact/', onlyIfSuccessful: true)
