@@ -61,7 +61,7 @@ pipeline {
             steps {
                 echo "Publishing version number v1.${env.BUILD_NUMBER}"
                 sh '''
-                docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
                 docker tag $IMAGE_NAME qba002/$IMAGE_NAME
                 docker tag $IMAGE_NAME qba002/jestapp:latest
                 docker push qba002/$IMAGE_NAME
