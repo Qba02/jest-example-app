@@ -14,5 +14,5 @@ fi
 #images
 imagesTags=$(docker images -aqf reference="jestapp:v*")
 if [ -n "$containersTags" ]; then
-     docker rmi $(docker images -q jestapp:v*)
+     docker rmi -f $(docker images -q jestapp:v*)
 fi
