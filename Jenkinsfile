@@ -37,7 +37,7 @@ pipeline {
                 sh '''
                 cd ./Dockerfiles
                 docker build -t $IMAGE_NAME -f Dockerfile.deploy .
-                docker run -d -p 41247:3000 --name deploy-container jestapp:deploy
+                docker run -d -p 41247:3000 --name deploy-container $IMAGE_NAME
                 '''
             }
         }
