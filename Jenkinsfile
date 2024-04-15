@@ -21,7 +21,7 @@ pipeline {
                 echo "Building and testing..."
                 sh '''
                 cd ./Dockerfiles
-                docker compose build --no-cache
+                docker compose build 
                 docker compose up --exit-code-from test_app
                 '''
             }
@@ -31,7 +31,7 @@ pipeline {
                 echo "Deploying ..."
                 sh '''
                 cd ./Dockerfiles
-                docker build --no-cache -t jestapp:deploy -f Dockerfile.deploy .
+                docker build  -t jestapp:deploy -f Dockerfile.deploy .
                 docker run -d -p 41247:3000 --name deploy-container jestapp:deploy
                 '''
             }
@@ -46,8 +46,10 @@ pipeline {
                 docker logs test-container > test-logs.log
 		        docker compose -f ../Dockerfiles/docker-compose.yaml down
                 docker cp deploy-container:server/build .
+                cd ..
+                tar -czf archive.tar.gz artifact/
                 '''
-                archiveArtifacts(artifacts: 'artifact/', onlyIfSuccessful: true)
+                archiveArtifacts(artifacts: 'archive.tar.gz', onlyIfSuccessful: true)
             }
         }
     }
