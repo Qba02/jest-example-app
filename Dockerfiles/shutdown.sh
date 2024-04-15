@@ -12,7 +12,7 @@ if [ -n "$containersTags" ]; then
 fi
 
 #images
-imagesTags=$(docker images -aqf reference="jestapp")
+imagesTags=$(docker images -aqf reference="jestapp:v*")
 if [ -n "$containersTags" ]; then
-     docker rmi jestapp:deploy jestapp:build jestapp:test
+     docker rmi $(docker images -q jestapp:v*)
 fi
