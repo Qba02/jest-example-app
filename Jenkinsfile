@@ -40,7 +40,7 @@ pipeline {
             steps {
                 echo 'Archiving build output and test logs...'
                 sh '''
-                mkdir artifact 
+                mkdir -p artifact 
 		        cd ./artifact     
                 docker logs build-container > build-logs.log
                 docker logs test-container > test-logs.log
